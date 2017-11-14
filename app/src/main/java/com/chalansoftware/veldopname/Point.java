@@ -1,6 +1,5 @@
 package com.chalansoftware.veldopname;
 
-import android.arch.lifecycle.ViewModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,7 +11,7 @@ public class Point implements Parcelable {
         //extends ViewModel {
     
     private String mName;
-    private double mCountPoint;
+    private double mPointCount;
     private double mPercentage;
     
     public Point(String name) {
@@ -20,7 +19,7 @@ public class Point implements Parcelable {
     }
     protected Point(Parcel in) {
         mName = in.readString();
-        mCountPoint = in.readDouble();
+        mPointCount = in.readDouble();
         mPercentage = in.readDouble();
     }
     public static final Creator<Point> CREATOR = new Creator<Point>() {
@@ -38,11 +37,11 @@ public class Point implements Parcelable {
     public void setName(String name) {
         mName = name;
     }
-    public double getCountPoint() {
-        return mCountPoint;
+    public double getPointCount() {
+        return mPointCount;
     }
-    public void setCountPoint(double countPoint) {
-        mCountPoint = countPoint;
+    public void setPointCount(double pointCount) {
+        mPointCount = pointCount;
     }
     public double getPercentage() {
         return mPercentage;
@@ -56,7 +55,7 @@ public class Point implements Parcelable {
     @Override public void writeToParcel(Parcel dest, int flags) {
     
         dest.writeString(mName);
-        dest.writeDouble(mCountPoint);
+        dest.writeDouble(mPointCount);
         dest.writeDouble(mPercentage);
     }
 }

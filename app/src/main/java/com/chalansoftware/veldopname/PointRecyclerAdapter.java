@@ -34,7 +34,9 @@ public class PointRecyclerAdapter
     @Override public void onBindViewHolder(PointViewHolder holder, int position) {
         
         if (mPointsList.size() > 0){
-            holder.nameTextView.setText(mPointsList.get(position).getName());}
+            holder.pointName(mPointsList.get(position).getName());
+            holder.countSetText((mPointsList.get(position).getPointCount()));
+        }
         
         Log.d(TAG, "onBind");
     }
@@ -59,14 +61,31 @@ public class PointRecyclerAdapter
             
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
+                    incrementValue();
                 }
             });
         }
-        void pointCount(double toAdd){
-            countTextView.setText((int) (toAdd + 1));
+        private void incrementValue() {
+            // This method takes the adapter position, inserts it as the id of the relevant Point
+            // object in mPointsList, retrieves the value inserted in it's countPoint, increments
+            // that value and replaces that value with the new one.
+            int position = getAdapterPosition();
+            double countValue = mPointsList.get(position).getPointCount();
+            if (countValue >= 0){
+                countValue++;
+            } else {
+                countValue = 0;
+            }
+            mPointsList.get(position).setPointCount(countValue);
+            countSetText(countValue);//updates the text in the textview with the new value
+            notifyItemChanged(position);//notifies the adapter of the change
         }
+        
         void pointName(String name){
-            nameTextView.setText(name);
+            nameTextView.setText(name);//keeping the working code in it's encapsulating class
+        }
+        void countSetText(double newValue){
+            countTextView.setText(String.valueOf(newValue));
         }
     }
 }

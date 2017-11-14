@@ -5,4 +5,6 @@
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 	
 	<string name="action_settings">Settings</string>
+	<string name="bereken_persentasie">Bereken persentasie</string>
+	<string name="persentasie_resultaat">Persentasie-resultate:</string>
 </resources>

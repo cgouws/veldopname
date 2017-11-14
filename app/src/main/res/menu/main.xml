@@ -6,4 +6,10 @@
 		android:orderInCategory="100"
 		android:title="@string/action_settings"
 		app:showAsAction="never"/>
+	<item
+		android:id="@+id/bereken_persentasie"
+		android:orderInCategory="90"
+		android:title="@string/bereken_persentasie"
+		app:showAsAction="ifRoom"
+		android:icon="@drawable/ic_insert_chart_white_24dp"/>
 </menu>

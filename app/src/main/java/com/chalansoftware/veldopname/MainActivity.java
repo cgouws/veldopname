@@ -1,39 +1,37 @@
 package com.chalansoftware.veldopname;
 
-import android.os.Parcelable;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener {
+        View.OnClickListener{
     
-    List<Point> mPointsList = new ArrayList<>();
+    ArrayList<Point> mPointsList = new ArrayList<>();
     
-    public static final String TAG = "MainActivity";
+    public static final String TAG = "veld";
     
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         initViews();
         
         if (savedInstanceState != null) {
@@ -49,11 +47,36 @@ public class MainActivity
         
         //Point point = ViewModelProviders.of(this).get(Point.class);
     }
-    @Override protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("Points", (ArrayList<? extends Parcelable>) mPointsList);
+    private void showDialog() {
+        // Shows a new dialog to add new points to mPointsList
+        DialogFragment addDialog = AddDialogFragment.newInstance(mPointsList);
+        addDialog.show(getSupportFragmentManager(), "dialog");
+    }
+    private void showPercentage(){
+        DialogFragment showPercentDialog = DialogShowPercent.newInstance(mPointsList);
+        showPercentDialog.show(getSupportFragmentManager(), "percent_dialog");
+    }
+    private void calculatePercentage(){
+        Log.d(TAG, "calculatePercentage");
+        double total = 0;
+        for (int i = 0; i < mPointsList.size(); i++) {
+            total = total + mPointsList.get(i).getPointCount();
+        }
+        double countValue;
+        double percentage;
+        if (total > 0){//do not divide by zero
+            for (int i = 0; i < mPointsList.size(); i++) {
+                countValue = mPointsList.get(i).getPointCount();
+                percentage = (countValue / total) * 100;
+                mPointsList.get(i).setPercentage(percentage);
+            }
+        }
     }
     
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("Points", mPointsList);
+    }
     private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -67,10 +90,13 @@ public class MainActivity
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        toggle.setDrawerIndicatorEnabled(false);// TODO: 2017/11/13 Verander
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);// TODO: 2017/11/13 Verander
         
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    
     @Override public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
@@ -79,21 +105,8 @@ public class MainActivity
         }
     }
     
-    private void showDialog() {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            fragmentTransaction.remove(prev);
-        }
-        fragmentTransaction.addToBackStack(null);
-        
-        DialogFragment addDialog = AddDialogFragment.newInstance(mPointsList);
-        addDialog.show(getSupportFragmentManager(), "dialog");
-        fragmentTransaction.commit();
-    }
-    
     @Override public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -114,6 +127,11 @@ public class MainActivity
         
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.bereken_persentasie) {
+            calculatePercentage();
+            showPercentage();
             return true;
         }
         

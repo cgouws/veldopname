@@ -20,6 +20,8 @@ import static android.R.layout.simple_list_item_1;
 
 /**
  * Created by Charl Gouws on 2017/11/11.
+ *
+ * Dialog to allow the user to add new points.
  */
 
 public class AddDialogFragment
@@ -49,7 +51,7 @@ public class AddDialogFragment
         
         // For displaying the names in the dialog's list
         final List<String> nameArrayList = new ArrayList<>();
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 simple_list_item_1, nameArrayList);
         listView.setAdapter(arrayAdapter);
         

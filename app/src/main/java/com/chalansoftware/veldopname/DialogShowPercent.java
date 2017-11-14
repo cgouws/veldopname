@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by Charl Gouws on 2017/11/14.
+ *
+ * Dialog to display Points with their percentages
  */
 
 public class DialogShowPercent

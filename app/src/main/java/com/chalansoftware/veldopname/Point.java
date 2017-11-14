@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 /**
  * Created by Charl Gouws on 2017/11/11.
+ *
+ * Data class for creating count points.
  */
 
 public class Point implements Parcelable {
@@ -14,10 +16,10 @@ public class Point implements Parcelable {
     private double mPointCount;
     private double mPercentage;
     
-    public Point(String name) {
+    Point(String name) {
         mName = name;
     }
-    protected Point(Parcel in) {
+    private Point(Parcel in) {
         mName = in.readString();
         mPointCount = in.readDouble();
         mPercentage = in.readDouble();
@@ -37,16 +39,16 @@ public class Point implements Parcelable {
     public void setName(String name) {
         mName = name;
     }
-    public double getPointCount() {
+    double getPointCount() {
         return mPointCount;
     }
-    public void setPointCount(double pointCount) {
+    void setPointCount(double pointCount) {
         mPointCount = pointCount;
     }
-    public double getPercentage() {
+    double getPercentage() {
         return mPercentage;
     }
-    public void setPercentage(double percentage) {
+    void setPercentage(double percentage) {
         mPercentage = percentage;
     }
     @Override public int describeContents() {

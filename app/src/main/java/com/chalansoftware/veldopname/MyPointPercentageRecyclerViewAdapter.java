@@ -7,15 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class MyPointPercentageRecyclerViewAdapter
         extends RecyclerView.Adapter<MyPointPercentageRecyclerViewAdapter.ViewHolder> {
     
     private final List<Point> mPoints;
-    public static final String TAG = "veld";
+    private static final String TAG = "veld";
     
-    public MyPointPercentageRecyclerViewAdapter(List<Point> points) {
+    MyPointPercentageRecyclerViewAdapter(List<Point> points) {
         mPoints = points;
     }
     
@@ -27,7 +28,13 @@ public class MyPointPercentageRecyclerViewAdapter
     
     @Override public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mNameView.setText(mPoints.get(position).getName());
-        holder.mPercentageView.setText(String.valueOf(mPoints.get(position).getPercentage()));
+        
+        // Formats the percentage for display
+        String pattern = "#";
+        double value = mPoints.get(position).getPercentage();
+        DecimalFormat decimalFormat = new DecimalFormat(pattern);
+        String output = decimalFormat.format(value);
+        holder.mPercentageView.setText(String.format("%s %%", output));
     }
     
     @Override public int getItemCount() {
@@ -37,11 +44,11 @@ public class MyPointPercentageRecyclerViewAdapter
     
     public class ViewHolder
             extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mNameView;
-        public final TextView mPercentageView;
+        final View mView;
+        final TextView mNameView;
+        final TextView mPercentageView;
         
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mNameView = view.findViewById(R.id.percentage_name_textview);

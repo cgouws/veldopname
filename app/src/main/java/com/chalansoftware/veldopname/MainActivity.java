@@ -46,7 +46,7 @@ public class MainActivity
     }
     private void showDialog() {
         // Shows a new dialog to add new points to mPointsList
-        DialogFragment addDialog = AddDialogFragment.newInstance(mPointsList);
+        DialogFragment addDialog = DialogAdd.newInstance(mPointsList);
         addDialog.show(getSupportFragmentManager(), "dialog");
     }
     private void showPercentage(){
@@ -79,7 +79,8 @@ public class MainActivity
         setSupportActionBar(toolbar);
         
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        fab.setVisibility(View.GONE);
+        //fab.setOnClickListener(this);
         
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -128,6 +129,10 @@ public class MainActivity
         if (id == R.id.bereken_persentasie) {
             calculatePercentage();
             showPercentage();
+            return true;
+        }
+        if (id == R.id.add_point) {
+            showDialog();
             return true;
         }
         

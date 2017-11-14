@@ -3,13 +3,20 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
 		android:id="@+id/action_settings"
-		android:orderInCategory="100"
+		android:orderInCategory="90"
 		android:title="@string/action_settings"
-		app:showAsAction="never"/>
+		app:showAsAction="ifRoom"/>
 	<item
 		android:id="@+id/bereken_persentasie"
-		android:orderInCategory="90"
+		android:orderInCategory="100"
 		android:title="@string/bereken_persentasie"
-		app:showAsAction="ifRoom"
+		app:showAsAction="always"
 		android:icon="@drawable/ic_insert_chart_white_24dp"/>
+	<item
+		android:id="@+id/add_point"
+		android:orderInCategory="100"
+		android:icon="@drawable/ic_add_24dp"
+		android:title="@string/voeg_by"
+		app:showAsAction="always"
+		/>
 </menu>

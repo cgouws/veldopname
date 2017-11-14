@@ -1,7 +1,6 @@
 package com.chalansoftware.veldopname;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -24,18 +23,18 @@ import static android.R.layout.simple_list_item_1;
  * Dialog to allow the user to add new points.
  */
 
-public class AddDialogFragment
+public class DialogAdd
         extends DialogFragment {
     
     List<Point> mPointsList;
     
-    // Returns a new AddDialogFragment taking as argument the ArrayList passed in when called
-    static AddDialogFragment newInstance(ArrayList<Point> pointList){
-        AddDialogFragment addDialogFragment = new AddDialogFragment();
+    // Returns a new DialogAdd taking as argument the ArrayList passed in when called
+    static DialogAdd newInstance(ArrayList<Point> pointList) {
+        DialogAdd dialogAdd = new DialogAdd();
         Bundle args = new Bundle();
         args.putParcelableArrayList("List", pointList);
-        addDialogFragment.setArguments(args);
-        return addDialogFragment;
+        dialogAdd.setArguments(args);
+        return dialogAdd;
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class AddDialogFragment
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_dialog, null);
         
         Button addButton = view.findViewById(R.id.add_point_button);
+        Button finishedButton = view.findViewById(R.id.finished_button);
         final EditText addEdittext = view.findViewById(R.id.add_point_edittext);
         final ListView listView = view.findViewById(R.id.added_points_listview);
         
@@ -63,14 +63,14 @@ public class AddDialogFragment
                 addEdittext.setText("");
             }
         });
+        finishedButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                dismiss();
+            }
+        });
         
         return new AlertDialog.Builder(getActivity()).setView(view)
                 .setTitle("Nuwe Telpunt")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                })
                 .create();
     }
 }

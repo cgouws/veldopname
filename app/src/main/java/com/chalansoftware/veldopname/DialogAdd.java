@@ -4,12 +4,16 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -43,10 +47,26 @@ public class DialogAdd
         }
         
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_dialog, null);
-        
-        Button addButton = view.findViewById(R.id.add_point_button);
-        Button finishedButton = view.findViewById(R.id.finished_button);
+    
+        final ImageButton addButton = view.findViewById(R.id.add_point_button);
+        disableButton(addButton);
+        ImageButton finishedButton = view.findViewById(R.id.finished_button);
         final EditText addEdittext = view.findViewById(R.id.add_point_edittext);
+        addEdittext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 0) {
+                    enableButton(addButton);
+                } else {
+                    disableButton(addButton);
+                }
+            
+            }
+            @Override public void afterTextChanged(Editable s) {
+            }
+        });
         final ListView listView = view.findViewById(R.id.added_points_listview);
         
         // For displaying the names in the dialog's list
@@ -61,6 +81,7 @@ public class DialogAdd
                 nameArrayList.add(addEdittext.getText().toString());
                 arrayAdapter.notifyDataSetChanged();
                 addEdittext.setText("");
+                disableButton(addButton);
             }
         });
         finishedButton.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +89,19 @@ public class DialogAdd
                 dismiss();
             }
         });
-        
-        return new AlertDialog.Builder(getActivity()).setView(view)
+    
+        return new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme).setView(view)
                 .setTitle("Nuwe Telpunt")
                 .create();
+    }
+    private void disableButton(ImageButton imageButton) {
+        imageButton.setEnabled(false);
+        DrawableCompat.setTint(imageButton.getDrawable(),
+                ContextCompat.getColor(getContext(), R.color.disabledImage));
+    }
+    private void enableButton(ImageButton imageButton) {
+        imageButton.setEnabled(true);
+        DrawableCompat.setTint(imageButton.getDrawable(),
+                ContextCompat.getColor(getContext(), R.color.enabledImage));
     }
 }

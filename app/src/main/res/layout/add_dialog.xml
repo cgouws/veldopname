@@ -6,7 +6,8 @@
 	android:id="@+id/add_dialog_fragment"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:layout_editor_absoluteY="81dp">
+	tools:layout_editor_absoluteY="81dp"
+	android:background="@color/background">
 	
 	<EditText
 		android:id="@+id/add_point_edittext"
@@ -21,27 +22,27 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"/>
 	
-	<Button
+	<ImageButton
 		android:id="@+id/finished_button"
 		style="@style/Widget.AppCompat.Button.Borderless"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="8dp"
 		android:layout_marginStart="8dp"
-		android:text="Klaar"
+		android:src="@drawable/ic_check_black_24dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.5"
 		app:layout_constraintStart_toEndOf="@+id/add_point_button"
 		app:layout_constraintTop_toTopOf="@+id/add_point_button"/>
 	
-	<Button
+	<ImageButton
 		android:id="@+id/add_point_button"
 		style="@style/Widget.AppCompat.Button.Borderless"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="8dp"
 		android:layout_marginStart="8dp"
-		android:text="Voeg By"
+		android:src="@drawable/ic_add_colored_24dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintEnd_toStartOf="@+id/finished_button"
 		app:layout_constraintHorizontal_bias="0.5"

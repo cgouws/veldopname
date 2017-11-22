@@ -46,7 +46,7 @@ public class DialogShowPercent
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new MyPointPercentageRecyclerViewAdapter(mPointsList));
         }
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme)
                 .setView(view)
                 .setTitle(R.string.persentasie_resultaat)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

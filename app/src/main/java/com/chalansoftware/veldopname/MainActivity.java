@@ -2,7 +2,6 @@ package com.chalansoftware.veldopname;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
@@ -14,14 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.ArrayList;
 
 public class MainActivity
         extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
     
     ArrayList<Point> mPointsList = new ArrayList<>();
     
@@ -29,6 +26,7 @@ public class MainActivity
     
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Log.d(TAG, "MainActivity.onCreate");
         initViews();
         
         if (savedInstanceState != null) {
@@ -68,19 +66,15 @@ public class MainActivity
             }
         }
     }
-    
     @Override protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("Points", mPointsList);
     }
+    
     private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-        //fab.setOnClickListener(this);
         
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -92,14 +86,6 @@ public class MainActivity
         
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-    
-    @Override public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab:
-                showDialog();
-                break;
-        }
     }
     
     @Override public void onBackPressed() {
@@ -116,6 +102,7 @@ public class MainActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -160,5 +147,29 @@ public class MainActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override protected void onPause() {
+        super.onPause();
+        //Log.d(TAG, "MainActivity.onPause");
+    }
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        //Log.d(TAG, "MainActivity.onDestroy");
+    }
+    @Override protected void onStop() {
+        super.onStop();
+        //Log.d(TAG, "MainActivity.onStop");
+    }
+    @Override protected void onStart() {
+        super.onStart();
+        //Log.d(TAG, "MainActivity.onStart");
+    }
+    @Override protected void onResume() {
+        super.onResume();
+        //Log.d(TAG, "MainActivity.onResume");
+    }
+    @Override protected void onRestart() {
+        super.onRestart();
+        //Log.d(TAG, "MainActivity.onRestart");
     }
 }

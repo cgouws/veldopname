@@ -3,26 +3,36 @@ package com.chalansoftware.veldopname;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.UUID;
+
 /**
  * Created by Charl Gouws on 2017/11/11.
- *
+ * <p>
  * Data class for creating count points.
  */
 
-public class Point implements Parcelable {
-        //extends ViewModel {
+public class Point
+        implements Parcelable {
+    //extends ViewModel {
     
     private String mName;
-    private double mPointCount;
-    private double mPercentage;
-    
+    private double mPointCount = 0d;
+    private double mPercentage = 0d;
+    private UUID mId;
     Point(String name) {
         mName = name;
+        mId = UUID.randomUUID();
     }
+    public Point(UUID id) {
+        // For returning a point from the database with PointCursorWrapper.
+        mId = id;
+    }
+    
     private Point(Parcel in) {
         mName = in.readString();
         mPointCount = in.readDouble();
         mPercentage = in.readDouble();
+        mId = UUID.fromString(in.readString());
     }
     public static final Creator<Point> CREATOR = new Creator<Point>() {
         @Override public Point createFromParcel(Parcel in) {
@@ -33,6 +43,9 @@ public class Point implements Parcelable {
             return new Point[size];
         }
     };
+    public UUID getId() {
+        return mId;
+    }
     public String getName() {
         return mName;
     }
@@ -42,13 +55,13 @@ public class Point implements Parcelable {
     double getPointCount() {
         return mPointCount;
     }
-    void setPointCount(double pointCount) {
+    public void setPointCount(double pointCount) {
         mPointCount = pointCount;
     }
     double getPercentage() {
         return mPercentage;
     }
-    void setPercentage(double percentage) {
+    public void setPercentage(double percentage) {
         mPercentage = percentage;
     }
     @Override public int describeContents() {
@@ -59,5 +72,6 @@ public class Point implements Parcelable {
         dest.writeString(mName);
         dest.writeDouble(mPointCount);
         dest.writeDouble(mPercentage);
+        dest.writeString(String.valueOf(mId));
     }
 }

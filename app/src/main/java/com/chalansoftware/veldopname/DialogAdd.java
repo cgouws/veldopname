@@ -2,6 +2,7 @@ package com.chalansoftware.veldopname;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -23,31 +24,31 @@ import static android.R.layout.simple_list_item_1;
 
 /**
  * Created by Charl Gouws on 2017/11/11.
- *
+ * <p>
  * Dialog to allow the user to add new points.
  */
 
 public class DialogAdd
         extends DialogFragment {
     
+    public static final String BUNDLE_KEY = "add_args";
     List<Point> mPointsList;
     
-    // Returns a new DialogAdd taking as argument the ArrayList passed in when called
-    static DialogAdd newInstance(ArrayList<Point> pointList) {
-        DialogAdd dialogAdd = new DialogAdd();
+    public static DialogFragment newInstance(List<Point> pointsList) {
+        // Creates a new dialog with data passed into it from the calling activity.
+        DialogAdd addDialog = new DialogAdd();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("List", pointList);
-        dialogAdd.setArguments(args);
-        return dialogAdd;
+        args.putParcelableArrayList(BUNDLE_KEY, (ArrayList<? extends Parcelable>) pointsList);
+        addDialog.setArguments(args);
+        return addDialog;
     }
-
+    
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            mPointsList = getArguments().getParcelableArrayList("List");
-        }
+        // Initializes the list from the data passed into newInstance().
+        mPointsList = getArguments().getParcelableArrayList(BUNDLE_KEY);
         
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_dialog, null);
-    
+        
         final ImageButton addButton = view.findViewById(R.id.add_point_button);
         disableButton(addButton);
         ImageButton finishedButton = view.findViewById(R.id.finished_button);
@@ -62,7 +63,7 @@ public class DialogAdd
                 } else {
                     disableButton(addButton);
                 }
-            
+    
             }
             @Override public void afterTextChanged(Editable s) {
             }
@@ -72,12 +73,14 @@ public class DialogAdd
         // For displaying the names in the dialog's list
         final List<String> nameArrayList = new ArrayList<>();
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                simple_list_item_1, nameArrayList);
+                                                                     simple_list_item_1,
+                                                                     nameArrayList);
         listView.setAdapter(arrayAdapter);
         
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                mPointsList.add(new Point(addEdittext.getText().toString()));
+                mPointsList.add(new Point(addEdittext.getText().toString()));//old
+                PointLab.getInstance(getActivity()).addPoint(addEdittext.getText().toString());
                 nameArrayList.add(addEdittext.getText().toString());
                 arrayAdapter.notifyDataSetChanged();
                 addEdittext.setText("");
@@ -89,7 +92,7 @@ public class DialogAdd
                 dismiss();
             }
         });
-    
+        
         return new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme).setView(view)
                 .setTitle("Nuwe Telpunt")
                 .create();
@@ -97,11 +100,11 @@ public class DialogAdd
     private void disableButton(ImageButton imageButton) {
         imageButton.setEnabled(false);
         DrawableCompat.setTint(imageButton.getDrawable(),
-                ContextCompat.getColor(getContext(), R.color.disabledImage));
+                               ContextCompat.getColor(getContext(), R.color.disabledImage));
     }
     private void enableButton(ImageButton imageButton) {
         imageButton.setEnabled(true);
         DrawableCompat.setTint(imageButton.getDrawable(),
-                ContextCompat.getColor(getContext(), R.color.enabledImage));
+                               ContextCompat.getColor(getContext(), R.color.enabledImage));
     }
 }

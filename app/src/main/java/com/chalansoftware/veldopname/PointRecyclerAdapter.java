@@ -2,49 +2,43 @@ package com.chalansoftware.veldopname;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Charl Gouws on 2017/11/11.
- *
+ * <p>
  * RecyclerView to display the points and add the ability to increment and decrement point counts.
  */
 
 public class PointRecyclerAdapter
-    extends RecyclerView.Adapter<PointRecyclerAdapter.PointViewHolder>{
+        extends RecyclerView.Adapter<PointRecyclerAdapter.PointViewHolder> {
     
-    private List<Point> mPointsList = new ArrayList<>();
-    private static final String TAG = "PointRecyclerAdapter";
+    private List<Point> mPointsList;
     
-    PointRecyclerAdapter(List<Point> listName){
+    PointRecyclerAdapter(List<Point> listName) {
         mPointsList = listName;
     }
     
     @Override public PointViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
-                .recyclerview_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recyclerview_list_item, parent, false);
         return new PointViewHolder(view);
     }
     
     @Override public void onBindViewHolder(PointViewHolder holder, int position) {
-        
-        if (mPointsList.size() > 0){
+    
+        if (mPointsList.size() > 0) {
             holder.pointName(mPointsList.get(position).getName());
             holder.countSetText((mPointsList.get(position).getPointCount()));
         }
-        
-        Log.d(TAG, "onBind");
     }
     
     @Override public int getItemCount() {
-        Log.d(TAG, "mPointsList.size in PointRecyclerAdapter: " + mPointsList.size());
         return mPointsList.size();
     }
     
@@ -98,11 +92,11 @@ public class PointRecyclerAdapter
             countSetText(countValue);
             notifyItemChanged(position);
         }
-        
-        void pointName(String name){
+    
+        void pointName(String name) {
             nameTextView.setText(name);//keeping the working code in it's encapsulating class
         }
-        void countSetText(double newValue){
+        void countSetText(double newValue) {
             countTextView.setText(String.valueOf(newValue));
         }
     }

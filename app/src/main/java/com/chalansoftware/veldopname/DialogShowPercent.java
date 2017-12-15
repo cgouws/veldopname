@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -27,10 +28,10 @@ public class DialogShowPercent
     private List<Point> mPointsList;
     public static final String BUNDLE_KEY = "List";
     
-    static DialogShowPercent newInstance(ArrayList<Point> points){
+    static DialogShowPercent newInstance(List<Point> points) {
         DialogShowPercent dialogShowPercent = new DialogShowPercent();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(BUNDLE_KEY, points);
+        args.putParcelableArrayList(BUNDLE_KEY, (ArrayList<? extends Parcelable>) points);
         dialogShowPercent.setArguments(args);
         return dialogShowPercent;
     }

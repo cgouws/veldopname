@@ -10,4 +10,7 @@
 	<string name="voeg_by">Voeg By</string>
 	<string name="title_activity_sound_settings">SoundSettings</string>
 	<string name="db_na_csv">Spaar</string>
+	
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

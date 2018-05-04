@@ -1,6 +1,7 @@
 package com.chalansoftware.veldopname;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -33,6 +34,11 @@ public class DialogAdd
     
     public static final String BUNDLE_KEY = "add_args";
     List<Point> mPointsList;
+    OnAddDialogDismissedListener mOnAddDialogDismissedListener;
+    
+    interface OnAddDialogDismissedListener {
+        void onAddDialogDismissed();
+    }
     
     public static DialogFragment newInstance(List<Point> pointsList) {
         // Creates a new dialog with data passed into it from the calling activity.
@@ -43,6 +49,15 @@ public class DialogAdd
         return addDialog;
     }
     
+    @Override public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnAddDialogDismissedListener = (OnAddDialogDismissedListener) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException(
+                    context.toString() + " must implement " + "OnAddDialogDismissedListener");
+        }
+    }
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Initializes the list from the data passed into newInstance().
         mPointsList = getArguments().getParcelableArrayList(BUNDLE_KEY);
@@ -79,8 +94,9 @@ public class DialogAdd
         
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                mPointsList.add(new Point(addEdittext.getText().toString()));//old
-                PointLab.getInstance(getActivity()).addPoint(addEdittext.getText().toString());
+                Point point = new Point(addEdittext.getText().toString());
+                mPointsList.add(point);//old
+                PointLab.getInstance(getActivity()).addPoint(point);
                 nameArrayList.add(addEdittext.getText().toString());
                 arrayAdapter.notifyDataSetChanged();
                 addEdittext.setText("");
@@ -90,6 +106,7 @@ public class DialogAdd
         finishedButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 dismiss();
+                mOnAddDialogDismissedListener.onAddDialogDismissed();
             }
         });
         

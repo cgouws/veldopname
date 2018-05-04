@@ -6,9 +6,10 @@ android {
     defaultConfig {
         applicationId "com.chalansoftware.veldopname"
         minSdkVersion 22
+        //noinspection OldTargetApi
         targetSdkVersion 26
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -32,7 +33,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.github.madrapps:pikolo:1.1.6'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile project(path: ':dbtocsvhandler')
 }
 
 

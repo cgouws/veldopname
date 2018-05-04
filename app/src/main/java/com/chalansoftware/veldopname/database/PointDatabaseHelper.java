@@ -16,11 +16,15 @@ public class PointDatabaseHelper
         extends SQLiteOpenHelper {
     
     public static final int VERSION = 1;
-    public static final String DATABASE_NAME = "pointdatabase.db";
+    //public static final String DATABASE_NAME = "pointdatabase.db";
     public static final String TABLE_NAME = "points";
     
     public PointDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, VERSION);
+        super(context, PointDbSchema.DATABASE_NAME, null, VERSION);
+    }
+    
+    public PointDatabaseHelper(Context context, String databaseName) {
+        super(new DatabaseContext(context), databaseName, null, VERSION);
     }
     @Override public void onCreate(SQLiteDatabase db) {
         // CREATE TABLE points (_id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT, pointname TEXT,

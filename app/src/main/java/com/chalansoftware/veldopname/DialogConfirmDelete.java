@@ -22,6 +22,7 @@ public class DialogConfirmDelete
     public static final String DELETE_POSITION_ARGS = "delete_position";
     
     public interface DeleteDialogListener {
+        // Interface methods used in MainActivity.
         void onDeleteDialogPositiveClick(DialogFragment dialogFragment, int position);
         
         void onDeleteDialogNegativeClick(DialogFragment dialogFragment);

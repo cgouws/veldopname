@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">VeldOpname</string>
+	<string name="app_name">Opname</string>
 	
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
@@ -8,4 +8,6 @@
 	<string name="bereken_persentasie">Bereken persentasie</string>
 	<string name="persentasie_resultaat">Persentasie-resultate:</string>
 	<string name="voeg_by">Voeg By</string>
+	<string name="title_activity_sound_settings">SoundSettings</string>
+	<string name="db_na_csv">Spaar</string>
 </resources>

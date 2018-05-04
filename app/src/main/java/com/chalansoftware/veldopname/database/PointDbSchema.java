@@ -9,6 +9,7 @@ package com.chalansoftware.veldopname.database;
 
 public class PointDbSchema {
     // Inner class to define string constants for the table definition.
+    public static final String DATABASE_NAME = "pointdatabase.db";
     public static final class PointTable {
         public static final String TABLE_NAME = "points";
         
@@ -18,7 +19,6 @@ public class PointDbSchema {
             public static final String POINTNAME = "pointname";
             public static final String POINTCOUNT = "pointcount";
             public static final String POINTPERCENTAGE = "pointpercentage";
-            
         }
     }
 }

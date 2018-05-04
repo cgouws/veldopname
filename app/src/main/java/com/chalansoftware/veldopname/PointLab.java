@@ -32,9 +32,24 @@ class PointLab {
         }
         return sPointLab;
     }
+    
+    static PointLab getInstance(Context context, String databaseName) {
+        if (sPointLab == null) {
+            sPointLab = new PointLab(context);
+        }
+        return sPointLab;
+    }
     private PointLab(Context context) {
         context = context.getApplicationContext();
         mDatabase = new PointDatabaseHelper(context.getApplicationContext()).getWritableDatabase();
+    }
+    
+    private PointLab(Context context, String databaseName) {
+        context = context.getApplicationContext();
+        //mDatabase = new PointDatabaseHelper(context.getApplicationContext())
+        // .getWritableDatabase();
+        mDatabase = new PointDatabaseHelper(context.getApplicationContext(),
+                databaseName).getWritableDatabase();
     }
     List<Point> getPointsList() {
         // Building a List from the data in the database, if it exists.
@@ -49,11 +64,12 @@ class PointLab {
         }
         return pointsList;
     }
-    void addPoint(String name) {
+    
+    void addPoint(Point point) {
         // Adds a new row to the database.
         // Wrap the new Point object into a ContentValues object and then inserts it into the db.
         // Called from DialogAdd's addButton.
-        ContentValues values = wrapIntoContentValuesObject(new Point(name));
+        ContentValues values = wrapIntoContentValuesObject(point);
         mDatabase.insert(TABLE_NAME, null, values);
     }
     void removePoint(Point point) {
@@ -61,6 +77,7 @@ class PointLab {
         String uuidString = point.getId().toString();
         mDatabase.delete(TABLE_NAME, Cols.POINTUUID + " = ?", new String[]{uuidString});
     }
+    
     void updatePoint(Point point) {
         // Writes existing Point objects to an existing row in the database. Called when
         // the database needs to be updated, like in MainActivity.onPause().
@@ -69,9 +86,13 @@ class PointLab {
         
         mDatabase.update(TABLE_NAME, values, Cols.POINTUUID + " = ?", new String[]{uuidString});
     }
+    
+    void updateCount(Point point) {
+    
+    }
     private static ContentValues wrapIntoContentValuesObject(Point point) {
         // Inserts a point object with all it's data into a ContentValues object, which can then
-        // be used to write the data into the database.
+        // be used to write the data into the database. Called in addPoint() and updatePoint().
         ContentValues values = new ContentValues();
         values.put(Cols.POINTUUID, point.getId().toString());
         values.put(Cols.POINTNAME, point.getName());
@@ -82,15 +103,8 @@ class PointLab {
     }
     private PointCursorWrapper queryPoints(String whereClause, String[] whereArgs) {
         // Suppressed because query closed in getPointsList().
-        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(
-                TABLE_NAME,
-                null,
-                whereClause,
-                whereArgs,
-                null,
-                null,
-                null,
-                null);
+        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(TABLE_NAME, null, whereClause,
+                whereArgs, null, null, null, null);
         return new PointCursorWrapper(cursor);
     }
     public void createTable(String tableName) {

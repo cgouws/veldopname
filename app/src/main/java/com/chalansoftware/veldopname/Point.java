@@ -2,6 +2,7 @@ package com.chalansoftware.veldopname;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.UUID;
 
@@ -12,7 +13,8 @@ import java.util.UUID;
  */
 
 public class Point
-        implements Parcelable {
+        implements Parcelable,
+        Comparable {
     //extends ViewModel {
     
     private String mName;
@@ -73,5 +75,9 @@ public class Point
         dest.writeDouble(mPointCount);
         dest.writeDouble(mPercentage);
         dest.writeString(String.valueOf(mId));
+    }
+    
+    @Override public int compareTo(@NonNull Object o) {
+        return 0;
     }
 }

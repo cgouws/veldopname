@@ -85,12 +85,16 @@ public class MainActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeViewItems();
-        // Initializing the List of Points
-        mPointsList = PointLab.getInstance(this).getPointsList();
+        buildPointsList();
         setRecyclerView();
         setDeleteBySwipe(mRecyclerView);
         initSound();
         updateTotals();
+    }
+    
+    private void buildPointsList() {
+        // Initializing the List of Points
+        mPointsList = PointLab.getInstance(this).getPointsList();
     }
     
     private void updateTotals() {
@@ -306,22 +310,15 @@ public class MainActivity
                             "onOptionsItemSelected: FileNotFoundException: " + e.getMessage());
                 }
                 return true;
-/*            case R.id.menu_backupdb_to_ext:
-                calculatePercentage();
-                try {
-                    backupDatabaseToExt();
-                } catch (FileNotFoundException fnf) {
-                    Toast.makeText(this, "Kon nie DB spaar na ext", Toast.LENGTH_SHORT).show();
-                    fnf.printStackTrace();
-                }
-                return true;
-            case R.id.menu_savedb_to_sd:
-                calculatePercentage();
-                saveDbToSd();
-                return true;*/
             case R.id.sound_settings:
                 Intent intent = new Intent(this, SoundSettings.class);
                 startActivity(intent);
+                return true;
+            case R.id.sort:
+                // Resort the list from the database and update the recyclerview
+                // In PointLab.
+                buildPointsList();
+                setRecyclerView();
                 return true;
         }
         //noinspection SimplifiableIfStatement
@@ -489,8 +486,8 @@ public class MainActivity
         @Override public void onBindViewHolder(PointViewHolder holder, int position) {
             
             if (mPointsList.size() > 0) {
-                holder.pointName(mPointsList.get(position).getName());
-                holder.countSetText((mPointsList.get(position).getPointCount()));
+                holder.setPointName(mPointsList.get(position).getName());
+                holder.setPointCount((mPointsList.get(position).getPointCount()));
             }
         }
         
@@ -518,7 +515,6 @@ public class MainActivity
                             mNowPlaying = mSoundPool.play(mButtonSound, mVolume, mVolume, 0, 0, 1);
                         }
                         // For the totals sound
-                        // TODO: 2018/04/24 Find more efficient way
                         if (mIsDistSound) {
                             if (mTotals == 50) {
                                 mSoundPool.stop(mNowPlaying);
@@ -565,7 +561,7 @@ public class MainActivity
             
             private void updatePoint(int position, double countValue, Point point) {
                 point.setPointCount(countValue);
-                countSetText(countValue);//updates the text in the textview with the new value
+                setPointCount(countValue);//updates the text in the textview with the new value
                 notifyItemChanged(position);//notifies the adapter of the change
                 PointLab.getInstance(getApplication()).updatePoint(point);
             }
@@ -588,12 +584,12 @@ public class MainActivity
                 updatePoint(position, countValue, point);
                 mTotalsTextView.setText(String.valueOf(mTotals));
             }
-            
-            void pointName(String name) {
+    
+            void setPointName(String name) {
                 nameTextView.setText(name);//keeping the working code in it's encapsulating class
             }
-            
-            void countSetText(double newValue) {
+    
+            void setPointCount(double newValue) {
                 countTextView.setText(String.valueOf(newValue));
             }
         }

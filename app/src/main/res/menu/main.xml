@@ -9,14 +9,14 @@
 	<item
 		android:id="@+id/sound_settings"
 		android:icon="@drawable/ic_volume_up_white_24dp"
-		android:orderInCategory="3"
+		android:orderInCategory="5"
 		android:title="Klank"
 		app:showAsAction="ifRoom"
 		/>
 	<item
 		android:id="@+id/bereken_persentasie"
 		android:icon="@drawable/ic_insert_chart_white_24dp"
-		android:orderInCategory="2"
+		android:orderInCategory="3"
 		android:title="@string/bereken_persentasie"
 		app:showAsAction="ifRoom"/>
 	<item
@@ -28,9 +28,14 @@
 		/>
 	<item
 		android:id="@+id/menu_write_to_csv"
-		android:orderInCategory="2"
+		android:orderInCategory="4"
 		android:title="@string/db_na_csv"
 		android:icon="@drawable/ic_save_white_24dp"
 		app:showAsAction="ifRoom"/>
-
+	<item
+		android:id="@+id/sort"
+		android:orderInCategory="2"
+		android:title="@string/sort"
+		android:icon="@drawable/ic_sort_white_24dp"
+		app:showAsAction="always"/>
 </menu>

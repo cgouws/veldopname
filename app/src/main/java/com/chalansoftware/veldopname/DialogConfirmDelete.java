@@ -13,15 +13,17 @@ import android.widget.Toast;
 
 /**
  * Created by Charl Gouws on 2017/12/14.
+ *
+ * Shown when user wants to delete an entry.
  */
 
 public class DialogConfirmDelete
         extends DialogFragment {
-    DeleteDialogListener mDeleteDialogListener;
+    OnDeleteDialogListener mDeleteDialogListener;
     
     public static final String DELETE_POSITION_ARGS = "delete_position";
     
-    public interface DeleteDialogListener {
+    public interface OnDeleteDialogListener {
         // Interface methods used in MainActivity.
         void onDeleteDialogPositiveClick(DialogFragment dialogFragment, int position);
         
@@ -31,7 +33,7 @@ public class DialogConfirmDelete
         super.onAttach(context);
         // Verify that the host Activity implements the callback interface.
         try {
-            mDeleteDialogListener = (DeleteDialogListener) context;
+            mDeleteDialogListener = (OnDeleteDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                                                  + " must implement DeleteDialogListener");
@@ -46,8 +48,7 @@ public class DialogConfirmDelete
     }
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         
-        View view = LayoutInflater.from(getActivity())
-                .inflate(R.layout.dialog_delete_confirm, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_confirm, null);
         
         final int position = getArguments().getInt(DELETE_POSITION_ARGS);
         

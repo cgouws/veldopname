@@ -5,13 +5,14 @@
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 	
 	<string name="action_settings">Settings</string>
-	<string name="bereken_persentasie">Bereken persentasie</string>
-	<string name="persentasie_resultaat">Persentasie-resultate:</string>
-	<string name="voeg_by">Voeg By</string>
+	<string name="caclulate_percentage">Bereken persentasie</string>
+	<string name="percentage_result">Persentasie-resultate:</string>
+	<string name="add">Voeg By</string>
 	<string name="title_activity_sound_settings">SoundSettings</string>
-	<string name="db_na_csv">Spaar</string>
-	
-	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="db_to_csv">Spaar</string>
 	<string name="sort">Sorteer</string>
+	<string name="save_file_name">Filename</string>
+	<string name="reset_count">Reset</string>
+	<string name="settings">Klank</string>
+	<string name="reset_question">Reset?</string>
 </resources>

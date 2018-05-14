@@ -30,20 +30,7 @@ class PointLab {
         context = context.getApplicationContext();
         mDatabase = new PointDatabaseHelper(context.getApplicationContext()).getWritableDatabase();
     }
-    private PointLab(Context context, String databaseName) {
-        context = context.getApplicationContext();
-        //mDatabase = new PointDatabaseHelper(context.getApplicationContext())
-        // .getWritableDatabase();
-        mDatabase = new PointDatabaseHelper(context.getApplicationContext(),
-                databaseName).getWritableDatabase();
-    }
     static PointLab getInstance(Context context) {
-        if (sPointLab == null) {
-            sPointLab = new PointLab(context);
-        }
-        return sPointLab;
-    }
-    static PointLab getInstance(Context context, String databaseName) {
         if (sPointLab == null) {
             sPointLab = new PointLab(context);
         }
@@ -94,9 +81,6 @@ class PointLab {
         ContentValues values = wrapIntoContentValuesObject(point);
         
         mDatabase.update(TABLE_NAME, values, Cols.POINTUUID + " = ?", new String[]{uuidString});
-    }
-    void updateCount(Point point) {
-    
     }
     private PointCursorWrapper queryPoints(String whereClause, String[] whereArgs) {
         // Suppressed because query closed in getPointsList().

@@ -61,8 +61,8 @@ public class DialogAdd
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Initializes the list from the data passed into newInstance().
         mPointsList = getArguments().getParcelableArrayList(BUNDLE_KEY);
-        
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_dialog, null);
+    
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_addnewpoint, null);
         
         final ImageButton addButton = view.findViewById(R.id.add_point_button);
         disableButton(addButton);

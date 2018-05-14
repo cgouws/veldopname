@@ -7,35 +7,42 @@
 			android:title="@string/action_settings"
 			app:showAsAction="ifRoom"/>-->
 	<item
-		android:id="@+id/sound_settings"
-		android:icon="@drawable/ic_volume_up_white_24dp"
+		android:id="@+id/add_point"
+		android:icon="@drawable/ic_add_24dp"
 		android:orderInCategory="5"
-		android:title="Klank"
+		android:title="@string/add"
+		app:showAsAction="always"
+		/>
+	<item
+		android:id="@+id/sort"
+		android:orderInCategory="6"
+		android:title="@string/sort"
+		android:icon="@drawable/ic_sort_white_24dp"
+		app:showAsAction="always"/>
+	<item
+		android:id="@+id/reset"
+		android:title="@string/reset_count"
+		android:orderInCategory="9"
+		android:icon="@drawable/ic_reset_white_24dp"
 		app:showAsAction="ifRoom"
 		/>
 	<item
 		android:id="@+id/bereken_persentasie"
 		android:icon="@drawable/ic_insert_chart_white_24dp"
-		android:orderInCategory="3"
-		android:title="@string/bereken_persentasie"
+		android:orderInCategory="7"
+		android:title="@string/caclulate_percentage"
 		app:showAsAction="ifRoom"/>
 	<item
-		android:id="@+id/add_point"
-		android:icon="@drawable/ic_add_24dp"
-		android:orderInCategory="1"
-		android:title="@string/voeg_by"
-		app:showAsAction="always"
-		/>
-	<item
 		android:id="@+id/menu_write_to_csv"
-		android:orderInCategory="4"
-		android:title="@string/db_na_csv"
+		android:orderInCategory="8"
+		android:title="@string/db_to_csv"
 		android:icon="@drawable/ic_save_white_24dp"
 		app:showAsAction="ifRoom"/>
 	<item
-		android:id="@+id/sort"
-		android:orderInCategory="2"
-		android:title="@string/sort"
-		android:icon="@drawable/ic_sort_white_24dp"
-		app:showAsAction="always"/>
+		android:id="@+id/sound_settings"
+		android:icon="@drawable/ic_volume_up_white_24dp"
+		android:orderInCategory="10"
+		android:title="@string/settings"
+		app:showAsAction="ifRoom"
+		/>
 </menu>

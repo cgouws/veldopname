@@ -55,8 +55,10 @@ import java.util.Locale;
 public class MainActivity
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        DialogConfirmDelete.DeleteDialogListener,
-        DialogAdd.OnAddDialogDismissedListener {
+        DialogConfirmDelete.OnDeleteDialogListener,
+        DialogAdd.OnAddDialogDismissedListener,
+        DialogSelectSaveName.OnSelectSaveNameDialogDismissedListener,
+        DialogConfirmReset.OnResetDialogListener {
     
     public static final String TAG_PREFS = "settings";
     public static final String KEY_BUTTONS = "keybuttonsound";
@@ -64,10 +66,12 @@ public class MainActivity
     public static final String TAG_LOG = "log";
     public static final String SHOW_ADD_DIALOG_TAG = "show_dialog";
     public static final String PERCENT_DIALOG_TAG = "percent_dialog";
+    public static final String SELECT_FILENAME_DIALOG_TAG = "select_filename";
     public static final int CREATE_REQUEST_CODE = 41;
     public static final int SAVE_REQUEST_CODE = 42;
     public static final int WRITE_REQUEST_CODE = 101;
     private static final String SHOW_CONFIRM_DELETE_DIALOG_TAG = "show_confirm_delete";
+    private static final String SHOW_CONFIRM_RESET_DIALOG_TAG = "show_confirm_reset";
     List<Point> mPointsList;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter<PointRecyclerAdapter.PointViewHolder> mAdapter;
@@ -91,12 +95,37 @@ public class MainActivity
         initSound();
         updateTotals();
     }
-    
+    void resetPointCount() {
+        // Reset the point count to zero for each point in mPointsList. Also updates the
+        // database, resets the recyclerview and totals.
+        for (Point p : mPointsList) {
+            p.setPointCount(0d);
+        }
+        updateDatabase();
+        setRecyclerView();
+        updateTotals();
+    }
+    private void updateDatabase() {
+        for (Point p : mPointsList) {
+            PointLab.getInstance(getApplication()).updatePoint(p);
+        }
+    }
+    @NonNull private void setRecyclerView() {
+        // Configures MainActivity's recyclerview.
+        mRecyclerView = findViewById(R.id.recyclerview);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        if (mAdapter == null) {
+            mAdapter = new PointRecyclerAdapter();
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
     private void buildPointsList() {
         // Initializing the List of Points
         mPointsList = PointLab.getInstance(this).getPointsList();
     }
-    
     private void updateTotals() {
         // mTotals is a marker for the distance sound. Used in the recyclerview.
         mTotals = 0d;
@@ -105,7 +134,6 @@ public class MainActivity
         }
         mTotalsTextView.setText(String.valueOf(mTotals));
     }
-    
     private void initSound() {
         AudioAttributes audioAttributes = new AudioAttributes.Builder().setUsage(
                 AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
@@ -128,27 +156,12 @@ public class MainActivity
             Log.e(TAG_LOG, "initSound: failed to load sound files");
         }
     }
-    
     @Override protected void onResume() {
         super.onResume();
         SharedPreferences prefs = getSharedPreferences(TAG_PREFS, MODE_PRIVATE);
         mIsButtonSound = prefs.getBoolean(KEY_BUTTONS, true);
         mIsDistSound = prefs.getBoolean(KEY_DISTANCE, true);
     }
-    
-    @NonNull private void setRecyclerView() {
-        // Configures MainActivity's recyclerview.
-        mRecyclerView = findViewById(R.id.recyclerview);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        if (mAdapter == null) {
-            mAdapter = new PointRecyclerAdapter();
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-    
     private void setDeleteBySwipe(RecyclerView recyclerView) {
         // Deletes an item from the recyclerview, pointsList and database by swiping.
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,
@@ -175,25 +188,28 @@ public class MainActivity
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-    
     private void showDeleteDialog(int position) {
         // Called by setDeleteBySwipe's ItemTouchHelper.SimpleCallback's onSwiped().
         DialogConfirmDelete dialogConfirmDelete = DialogConfirmDelete.newInstance(position);
         dialogConfirmDelete.setCancelable(false);// dialog cannot be dismissed by tapping outside.
         dialogConfirmDelete.show(getSupportFragmentManager(), SHOW_CONFIRM_DELETE_DIALOG_TAG);
     }
-    
     @Override public void onDeleteDialogPositiveClick(DialogFragment dialogFragment, int position) {
         // Interface methods. Interface declared in DialogConfirmDelete. To let MainActivity know
         // which choice was made in the dialog.
         deletePoint(position);
     }
-    
     @Override public void onDeleteDialogNegativeClick(DialogFragment dialogFragment) {
         // Interface method. Interface declared in DialogConfirmDelete.
         mAdapter.notifyDataSetChanged();
     }
+    @Override public void onResetDialogPositiveClick(DialogFragment dialogFragment) {
+        // Resets the pointcoint to zero.
+        resetPointCount();
+    }
+    @Override public void onResetDialogNegativeClick(DialogFragment dialogFragment) {
     
+    }
     private void deletePoint(int position) {
         // Called when deletion confirmed by user pressing confirm in delete dialog.
         // Called by the interface method onDeleteDialogPositiveClick().
@@ -202,14 +218,15 @@ public class MainActivity
         mPointsList.remove(position);
         updateTotals();
     }
-    
     private void showAddDialog() {
         // Shows a new dialog to add new points to mPointsList and database.
         // Called by the menu item R.id.add_point.
         DialogFragment addDialog = DialogAdd.newInstance(mPointsList);
         addDialog.show(getSupportFragmentManager(), SHOW_ADD_DIALOG_TAG);
     }
-    
+    private void showSelectFileNameDialog() {
+        new DialogSelectSaveName().show(getSupportFragmentManager(), SELECT_FILENAME_DIALOG_TAG);
+    }
     private void showPercentage() {
         // Displays a new dialog showing the percentage.
         // Called by menu item R.id.bereken_persentasie.
@@ -217,7 +234,6 @@ public class MainActivity
         DialogFragment showPercentDialog = DialogShowPercent.newInstance(mPointsList);
         showPercentDialog.show(getSupportFragmentManager(), PERCENT_DIALOG_TAG);
     }
-    
     private void calculatePercentage() {
         // Calculates the percentage for each point object for display in the percentage dialog
         // and for saving in the database.
@@ -237,7 +253,6 @@ public class MainActivity
             updateDatabase();
         }
     }
-    
     @Override protected void onPause() {
         super.onPause();
         // Writes all changes to mPointsList to the database. Sometimes when running instant run,
@@ -245,13 +260,6 @@ public class MainActivity
         // may not be synchronised when using instant run.
         updateDatabase();
     }
-    
-    private void updateDatabase() {
-        for (Point p : mPointsList) {
-            PointLab.getInstance(getApplication()).updatePoint(p);
-        }
-    }
-    
     private void initializeViewItems() {
         // Called from onCreate.
         setContentView(R.layout.activity_main);
@@ -271,7 +279,6 @@ public class MainActivity
         
         mTotalsTextView = findViewById(R.id.textViewAantalTree);
     }
-    
     @Override public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -280,13 +287,11 @@ public class MainActivity
             super.onBackPressed();
         }
     }
-    
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -301,24 +306,21 @@ public class MainActivity
                 showAddDialog();
                 return true;
             case R.id.menu_write_to_csv:
-                calculatePercentage();
-                try {
-                    backupDatabaseToCsv();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Log.e(TAG_LOG,
-                            "onOptionsItemSelected: FileNotFoundException: " + e.getMessage());
-                }
+                showSelectFileNameDialog();
                 return true;
             case R.id.sound_settings:
                 Intent intent = new Intent(this, SoundSettings.class);
                 startActivity(intent);
                 return true;
             case R.id.sort:
-                // Resort the list from the database and update the recyclerview
-                // In PointLab.
+                // Resort the list from the database (the sorting is done in
+                // PointLab.getPointsList) and update the recyclerview.
                 buildPointsList();
                 setRecyclerView();
+                return true;
+            case R.id.reset:
+                new DialogConfirmReset().show(getSupportFragmentManager(),
+                        SHOW_CONFIRM_RESET_DIALOG_TAG);
                 return true;
         }
         //noinspection SimplifiableIfStatement
@@ -327,7 +329,6 @@ public class MainActivity
         //}
         return super.onOptionsItemSelected(item);
     }
-    
     void saveDbToSd() {
         //  Backs up the database to the removable sd card.
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
@@ -340,7 +341,6 @@ public class MainActivity
         intent.putExtra(Intent.EXTRA_TITLE, filename);
         startActivityForResult(intent, CREATE_REQUEST_CODE);
     }
-    
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CREATE_REQUEST_CODE) {
@@ -350,7 +350,6 @@ public class MainActivity
             }
         }
     }
-    
     @SuppressWarnings("StatementWithEmptyBody") @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -374,14 +373,15 @@ public class MainActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    
-    @SuppressWarnings("ResultOfMethodCallIgnored") private void backupDatabaseToCsv()
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void backupDatabaseToCsv(String fileSaveName)
             throws FileNotFoundException {
         checkPermissions();
-        /* Saves the current database to a .csv file on external storage (not removable storage).*/
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+        /* Saves the current database to a .csv file on external storage (not removable storage).
+        * Method called from the menu (menu_write_to_csv).*/
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.US);
         Date dateNow = new Date();
-        String filename = dateFormat.format(dateNow) + "dbtocsv.csv";
+        String filename = fileSaveName + "_" + dateFormat.format(dateNow) + ".csv";
         PointDatabaseHelper databaseHelper = new PointDatabaseHelper(getApplication());
         
         File exportDir = new File(Environment.getExternalStorageDirectory(),
@@ -396,16 +396,18 @@ public class MainActivity
             // Uses library components found in the module (in this app) dbtocsvhandler.
             CSVWriter csvWriter = new CSVWriter(new FileWriter(outToCsvFile));
             SQLiteDatabase database = databaseHelper.getReadableDatabase();
-            Cursor cursor = database.query(PointDbSchema.PointTable.TABLE_NAME, null, null, null,
+            // Data from 3 columns saved
+            String[] cols = {
+                    PointDbSchema.PointTable.Cols.POINTNAME,
+                    PointDbSchema.PointTable.Cols.POINTCOUNT,
+                    PointDbSchema.PointTable.Cols.POINTPERCENTAGE};
+            Cursor cursor = database.query(PointDbSchema.PointTable.TABLE_NAME, cols, null, null,
                     null, null, null);
             csvWriter.writeNext(cursor.getColumnNames());
             while (cursor.moveToNext()) {
                 String[] arrStr = {
                         cursor.getString(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4)};
+                        cursor.getString(1), cursor.getString(2)};
                 csvWriter.writeNext(arrStr);
             }
             csvWriter.close();
@@ -415,7 +417,6 @@ public class MainActivity
             e.printStackTrace();
         }
     }
-    
     private void backupDatabaseToExt()
             throws FileNotFoundException {
         checkPermissions();
@@ -462,7 +463,6 @@ public class MainActivity
         updateDatabase();
         updateTotals();
     }
-    
     void checkPermissions() {
         // Runtime permission request for Android 6.0+.
         int permission = ContextCompat.checkSelfPermission(this,
@@ -473,7 +473,18 @@ public class MainActivity
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
         }
     }
-    
+    @Override public void onSelectSaveNameDialogDismissed(String fileSaveName) {
+        // Method called from within ShowSelectFileNameDialog(). When the finished button is
+        // clicked in above mentioned dialog this method is called. The fileSaveName string is
+        // passed from the dialog.
+        calculatePercentage();
+        try {
+            backupDatabaseToCsv(fileSaveName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.e(TAG_LOG, "onOptionsItemSelected: FileNotFoundException: " + e.getMessage());
+        }
+    }
     class PointRecyclerAdapter
             extends RecyclerView.Adapter<PointRecyclerAdapter.PointViewHolder> {
         

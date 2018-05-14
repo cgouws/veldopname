@@ -16,9 +16,9 @@ public class PointDbSchema {
         // Inner class to describe the columns
         public static final class Cols {
             public static final String POINTUUID = "uuid";
-            public static final String POINTNAME = "pointname";
-            public static final String POINTCOUNT = "pointcount";
-            public static final String POINTPERCENTAGE = "pointpercentage";
+            public static final String POINTNAME = "Naam";
+            public static final String POINTCOUNT = "Hoeveelheid";
+            public static final String POINTPERCENTAGE = "Persentasie";
         }
     }
 }
